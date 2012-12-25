@@ -1,0 +1,8 @@
+﻿post:
+  template: _template.txt
+  extension: md
+remote:
+  command: rsync
+  settings: -av --delete
+  source: _site/
+  destination: username@servername:/var/www/websitename/
