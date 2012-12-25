@@ -21,6 +21,8 @@
 
 ### _config.yml
 
+Add the following to your `_config.yml` file:
+
     post:
       template:
       extension:
@@ -29,6 +31,8 @@
       settings:
       source:
       destination:
+
+You can leave out the `remote` parameters if you're planning to only deploy your site with `rake git`.
 
 ## Examples
 
