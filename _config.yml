@@ -1,5 +1,8 @@
 ﻿post:
-  template: _template.txt
+  template: _post.txt
+  extension: md
+page:
+  template: _page.txt
   extension: md
 remote:
   command: rsync

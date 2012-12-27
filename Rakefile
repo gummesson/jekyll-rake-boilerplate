@@ -1,5 +1,6 @@
-# For the configuration
-require 'yaml'
+# Requirements
+require 'yaml'       # For reading the configuration file
+require 'fileutils'  # For creating recursive directories
 
 # Load the configuration file
 config = YAML.load_file("_config.yml")
@@ -27,13 +28,33 @@ task :post, :title do |t, args|
   date = Time.now.strftime("%Y-%m-%d")
   if title.nil?
     raise "Please add a title to your post."
-  else
-    filename = "#{date}-#{title.gsub(/\s/, "-").downcase}.#{extension}"
-    content = File.read(template)
-    File.open("_posts/#{filename}","w") { |file|
-      file.puts("#{content.gsub("title:", "title: #{title}")}") }
-    puts "#{filename} was created."
   end
+  filename = "#{date}-#{title.gsub(/[^[:alnum:]]+/, "-").downcase}.#{extension}"
+  content = File.read(template)
+  File.open("_posts/#{filename}","w") { |file|
+    file.puts("#{content.gsub("title:", "title: #{title}")}") }
+  puts "#{filename} was created."
+end
+
+#rake page["Page title", "Path/to/folder"]
+desc "Create a page in a specific directory."
+task :page, :title, :path do |t, args|
+  title = args[:title]
+  path = args[:path]
+  template = config["page"]["template"]
+  extension = config["page"]["extension"]
+  if title.empty?
+    raise "Please add a title to your page."
+  end
+  if path.nil?
+    path = "./"
+  else
+    FileUtils.mkdir_p("#{path}") unless File.exists?("#{path}")
+  end
+  filename = "#{title.gsub(/[^[:alnum:]]+/, "-").downcase}.#{extension}"
+  content = File.read(template)
+  File.open("#{path}/#{filename}","w") { |file|
+    file.puts("#{content.gsub("title:", "title: #{title}")}") }
 end
 
 # rake git["Commit message"]
@@ -42,12 +63,11 @@ task :git, :message do |t, args|
   message = args[:message]
   if message.nil?
     raise "Please add a commit message."
-  else
-    system "git add ."
-    system "git commit -m \"#{message}\""
-    system "git push origin master"
-    puts "Your site was deployed."
   end
+  system "git add ."
+  system "git commit -m \"#{message}\""
+  system "git push origin master"
+  puts "Your site was deployed."
 end
 
 # rake remote
