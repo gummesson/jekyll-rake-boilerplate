@@ -1,6 +1,6 @@
 # Jekyll Rake Boilerplate
 
-*Jekyll Rake Boilerplate* is a small rake "boilerplate" for doing common tasks with the static site generator [Jekyll](http://jekyllrb.com/ "Jekyll"), such as generating your site (with an optional post limit), creating a new post from a default template and deploying it to it's remote git repository or a remote host/server.
+*Jekyll Rake Boilerplate* is a small rake "boilerplate" for doing common tasks with the static site generator [Jekyll](http://jekyllrb.com/ "Jekyll"), such as generating your site, creating a new post or page from a default template and deploying it to a remote git repository or a remote host/server.
 
 ## Usage
 
@@ -16,7 +16,7 @@
 
 `rake post["Post title"]` creates a new post in the `_posts` directory by reading the default template file, adding the title you've specified and generating a file name by using the current date and the title.
 
-`rake page["Page title", "Path/to/folder"]` creates a new page. If the file path is not specified the page will get placed in the site's root directory.
+`rake page["Page title","Path/to/folder"]` creates a new page. If the file path is not specified the page will get placed in the site's root directory.
 
 `rake git["Commit message"]` adds, commits and pushes your site to the site's remote git repository with the commit message you've specified.
 
