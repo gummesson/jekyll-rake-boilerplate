@@ -8,7 +8,8 @@ config = YAML.load_file("_config.yml")
 # Set build as default
 task :default => :build
 
-# rake build or rake build[number]
+# rake build
+# rake build[number]
 desc "Generate the site (with an optional post limit)"
 task :build, :number do |t, args|
   number = args[:number]
@@ -36,7 +37,8 @@ task :post, :title do |t, args|
   puts "#{filename} was created."
 end
 
-#rake page["Page title", "Path/to/folder"]
+# rake page["Page title"]
+# rake page["Page title","Path/to/folder"]
 desc "Create a page in a specific directory."
 task :page, :title, :path do |t, args|
   title = args[:title]
