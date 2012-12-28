@@ -54,7 +54,7 @@ Rake tasks doesn't play nice when it comes to including commas in arguments. For
     layout: post
     ---
 
-## Page template
+### Page template
 
     ---
     title:
