@@ -43,7 +43,7 @@ end
 
 # rake page["Page title"]
 # rake page["Page title","Path/to/folder"]
-desc "Create a page in a specific directory."
+desc "Create a page (with an optional filepath)"
 task :page, :title, :path do |t, args|
   title = args[:title]
   filepath = args[:path]
@@ -68,9 +68,9 @@ task :page, :title, :path do |t, args|
   end
 end
 
-# rake git["Commit message"]
+# rake deploy["Commit message"]
 desc "Deploy the site to it's remote git repository"
-task :git, :message do |t, args|
+task :deploy, :message do |t, args|
   message = args[:message]
   if message.nil? or message.empty?
     raise "Please add a commit message."
@@ -81,13 +81,13 @@ task :git, :message do |t, args|
   puts "Your site was deployed."
 end
 
-# rake remote
-desc "Deploy the site to a remote server"
-task :remote do
-  command = config["remote"]["command"]
-  source = config["remote"]["source"]
-  destination = config["remote"]["destination"]
-  settings =config["remote"]["settings"]
+# rake transfer
+desc "Transfer the site to a remote server or a local git repository"
+task :transfer do
+  command = config["transfer"]["command"]
+  source = config["transfer"]["source"]
+  destination = config["transfer"]["destination"]
+  settings =config["transfer"]["settings"]
   if command.nil? or command.empty?
     raise "Please choose a file transfer command."
   elsif command == "robocopy"

@@ -1,6 +1,6 @@
 # Jekyll Rake Boilerplate
 
-*Jekyll Rake Boilerplate* is a small rake "boilerplate" for doing common tasks with the static site generator [Jekyll](http://jekyllrb.com/ "Jekyll"), such as generating your site, creating a new post or page from a default template and deploying it to a remote git repository or a remote host/server.
+*Jekyll Rake Boilerplate* is a small rake "boilerplate" for doing common tasks with the static site generator [Jekyll](http://jekyllrb.com/ "Jekyll"), such as generating your site, creating a new post or page from a default template and transfering it to a remote git repository, a remote host/server or a local git repository.
 
 ## Usage
 
@@ -9,8 +9,8 @@
     rake build[number]
     rake post["Post title"]
     rake page["Page title","Path/to/folder"]
-    rake git["Commit message"]
-    rake remote
+    rake deploy["Commit message"]
+    rake transfer
 
 `rake build` generates the site. If you want to generate it with a post limit, use `rake build[1]` or whatever number of posts you want to generate. 
 
@@ -18,9 +18,9 @@
 
 `rake page["Page title","Path/to/folder"]` creates a new page. If the file path is not specified the page will get placed in the site's source directory.
 
-`rake git["Commit message"]` adds, commits and pushes your site to the site's remote git repository with the commit message you've specified.
+`rake deploy["Commit message"]` adds, commits and pushes your site to the site's remote git repository with the commit message you've specified.
 
-`rake remote` uses either `robocopy` or `rsync` to transfer your site to a remote host/server.
+`rake transfer` uses either `robocopy` or `rsync` to transfer your site to a remote host/server or a local git repository.
 
 ### _config.yml
 
@@ -33,17 +33,17 @@ Add the following to your `_config.yml` file:
       template:
       extension:
     editor:
-    remote:
+    transfer:
       command:
       settings:
       source:
       destination:
 
-You can leave the `remote` parameters out if you're planning to only deploy your site with `rake git`.
+You can leave the `transfer` parameters out if you're planning to only deploy your site with `rake git`.
 
 ## Known issues
 
-Rake tasks doesn't play nice when it comes to including commas in arguments. For example, if you try to create a post by running `post["One, two, three"]` the name and title of the post will become *"One"*. The easiest work-around for this is to skip the commas when your creating a post and adding them later on.
+Rake tasks doesn't play nice when it comes to including commas in arguments. For example, if you try to create a post by running `post["One, two, three"]` the name and title of the post will become `One`. The easiest work-around for this is to skip the commas when your creating a post and adding them later on.
 
 ## Examples
 
@@ -61,21 +61,37 @@ Rake tasks doesn't play nice when it comes to including commas in arguments. For
     layout: page
     ---
 
-### Remote settings (for Windows)
+### Remote transfer settings (for Windows)
 
-    remote:
+    transfer:
       command: robocopy
       settings: /mir
-      source: _site/
+      source: _site\
       destination: username@servername:\var\www\websitename\
 
-### Remote settings (for Unix)
+### Remote transfer settings (for Unix)
 
-    remote:
+    transfer:
       command: rsync
       settings: -av --delete
       source: _site/
       destination: username@servername:/var/www/websitename/
+
+### Local transfer settings (for Windows)
+
+    transfer:
+      command: robocopy
+      settings: /e
+      source: _site\
+      destination: C:\Git\username.github.com\
+
+### Local transfer settings (for Unix)
+
+    transfer:
+      command: rsync
+      settings: -av
+      source: _site/
+      destination: ~/Git/username.github.com/
 
 ## License
 

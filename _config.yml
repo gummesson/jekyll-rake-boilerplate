@@ -5,8 +5,8 @@ page:
   template: _page.txt
   extension: md
 editor: geany
-remote:
+transfer:
   command: rsync
-  settings: -av --delete
+  settings: -av
   source: _site/
-  destination: username@servername:/var/www/websitename/
+  destination: ~/Git/username.github.com/
