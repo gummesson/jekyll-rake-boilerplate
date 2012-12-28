@@ -8,7 +8,7 @@
 
     rake build[number]
     rake post["Post title"]
-    rake page["Page title", "Path/to/folder"]
+    rake page["Page title","Path/to/folder"]
     rake git["Commit message"]
     rake remote
 
@@ -16,7 +16,7 @@
 
 `rake post["Post title"]` creates a new post in the `_posts` directory by reading the default template file, adding the title you've specified and generating a file name by using the current date and the title.
 
-`rake page["Page title","Path/to/folder"]` creates a new page. If the file path is not specified the page will get placed in the site's root directory.
+`rake page["Page title","Path/to/folder"]` creates a new page. If the file path is not specified the page will get placed in the site's source directory.
 
 `rake git["Commit message"]` adds, commits and pushes your site to the site's remote git repository with the commit message you've specified.
 
@@ -29,13 +29,21 @@ Add the following to your `_config.yml` file:
     post:
       template:
       extension:
+    page:
+      template:
+      extension:
+    editor:
     remote:
       command:
       settings:
       source:
       destination:
 
-You can leave out the `remote` parameters if you're planning to only deploy your site with `rake git`.
+You can leave the `remote` parameters out if you're planning to only deploy your site with `rake git`.
+
+## Known issues
+
+Rake tasks doesn't play nice when it comes to including commas in arguments. For example, if you try to create a post by running `post["One, two, three"]` the name and title of the post will become *"One"*. The easiest work-around for this is to skip the commas when your creating a post and adding them later on.
 
 ## Examples
 
@@ -44,6 +52,13 @@ You can leave out the `remote` parameters if you're planning to only deploy your
     ---
     title:
     layout: post
+    ---
+
+## Page template
+
+    ---
+    title:
+    layout: page
     ---
 
 ### Remote settings (for Windows)
@@ -61,10 +76,6 @@ You can leave out the `remote` parameters if you're planning to only deploy your
       settings: -av --delete
       source: _site/
       destination: username@servername:/var/www/websitename/
-
-## Known issues
-
-Rake tasks won't unfortunately play nice when it comes to including commas in arguments. For example, if you try to run `post["One, two, three"]` the name and title of the post will become just *"One"*. The easiest work around for this is to skip using commas when your creating a post and adding them later on.
 
 ## License
 

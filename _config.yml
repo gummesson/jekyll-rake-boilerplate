@@ -4,6 +4,7 @@
 page:
   template: _page.txt
   extension: md
+editor: geany
 remote:
   command: rsync
   settings: -av --delete

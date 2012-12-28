@@ -13,7 +13,7 @@ task :default => :build
 desc "Generate the site (with an optional post limit)"
 task :build, :number do |t, args|
   number = args[:number]
-  if number.nil?
+  if number.nil? or number.empty?
     system "jekyll --auto --server"
   else
     system "jekyll --auto --server --limit_posts=#{number}"
@@ -26,15 +26,19 @@ task :post, :title do |t, args|
   title = args[:title]
   template = config["post"]["template"]
   extension = config["post"]["extension"]
-  date = Time.now.strftime("%Y-%m-%d")
-  if title.nil?
+  editor = config["editor"]
+  if title.nil? or title.empty?
     raise "Please add a title to your post."
   end
+  date = Time.now.strftime("%Y-%m-%d")
   filename = "#{date}-#{title.gsub(/[^[:alnum:]]+/, "-").downcase}.#{extension}"
   content = File.read(template)
   File.open("_posts/#{filename}","w") { |file|
     file.puts("#{content.gsub("title:", "title: #{title}")}") }
   puts "#{filename} was created."
+  unless editor.nil? or editor.empty?
+    system "#{editor} _posts/#{filename}"
+  end
 end
 
 # rake page["Page title"]
@@ -42,28 +46,33 @@ end
 desc "Create a page in a specific directory."
 task :page, :title, :path do |t, args|
   title = args[:title]
-  path = args[:path]
+  filepath = args[:path]
   template = config["page"]["template"]
   extension = config["page"]["extension"]
-  if title.empty?
+  editor = config["editor"]
+  if title.nil? or title.empty?
     raise "Please add a title to your page."
   end
-  if path.nil?
-    path = "./"
+  if filepath.nil? or filepath.empty?
+    filepath = "./"
   else
-    FileUtils.mkdir_p("#{path}") unless File.exists?("#{path}")
+    FileUtils.mkdir_p("#{filepath}") unless File.exists?("#{filepath}")
   end
   filename = "#{title.gsub(/[^[:alnum:]]+/, "-").downcase}.#{extension}"
   content = File.read(template)
-  File.open("#{path}/#{filename}","w") { |file|
+  File.open("#{filepath}/#{filename}","w") { |file|
     file.puts("#{content.gsub("title:", "title: #{title}")}") }
+  puts "#{filename} was created in #{filepath}."
+  unless editor.nil? or editor.empty?
+    system "#{editor} #{filepath}/#{filename}"
+  end
 end
 
 # rake git["Commit message"]
 desc "Deploy the site to it's remote git repository"
 task :git, :message do |t, args|
   message = args[:message]
-  if message.nil?
+  if message.nil? or message.empty?
     raise "Please add a commit message."
   end
   system "git add ."
@@ -79,7 +88,7 @@ task :remote do
   source = config["remote"]["source"]
   destination = config["remote"]["destination"]
   settings =config["remote"]["settings"]
-  if command.nil?
+  if command.nil? or command.empty?
     raise "Please choose a file transfer command."
   elsif command == "robocopy"
     system "robocopy #{source} #{destination} #{settings}"
