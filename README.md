@@ -24,8 +24,6 @@
 
 ### _config.yml
 
-Add the following to your `_config.yml` file:
-
     post:
       template:
       extension:
@@ -38,12 +36,6 @@ Add the following to your `_config.yml` file:
       settings:
       source:
       destination:
-
-You can leave the `transfer` parameters out if you're planning to only deploy your site with `rake git`.
-
-## Known issues
-
-Rake tasks doesn't play nice when it comes to including commas in arguments. For example, if you try to create a post by running `post["One, two, three"]` the name and title of the post will become `One`. The easiest work-around for this is to skip the commas when your creating a post and adding them later on.
 
 ## Examples
 
@@ -92,6 +84,10 @@ Rake tasks doesn't play nice when it comes to including commas in arguments. For
       settings: -av
       source: _site/
       destination: ~/Git/username.github.com/
+
+## Known issues
+
+Rake tasks doesn't play nice when it comes to including commas in arguments. For example, if you try to create a post by running `post["One, two, three"]` the name and title of the post will become `One`. The easiest work-around for this is to skip the commas when your creating a post and adding them later on.
 
 ## License
 
