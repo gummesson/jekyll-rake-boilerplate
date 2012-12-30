@@ -6,20 +6,8 @@ require 'fileutils'  # For creating recursive directories
 # Load the configuration file
 config = YAML.load_file("_config.yml")
 
-# Set build as default
+# Set "rake build" as default task
 task :default => :build
-
-# rake build
-# rake build[number]
-desc "Generate the site (with an optional post limit)"
-task :build, :number do |t, args|
-  number = args[:number]
-  if number.nil? or number.empty?
-    system "jekyll --auto --server"
-  else
-    system "jekyll --auto --server --limit_posts=#{number}"
-  end
-end
 
 # rake post["Post title"]
 desc "Create a post in the _posts directory"
@@ -67,6 +55,28 @@ task :page, :title, :path do |t, args|
   unless editor.nil? or editor.empty?
     system "#{editor} #{filepath}/#{filename}"
   end
+end
+
+# rake build
+# rake build[number]
+desc "Generate the site (with an optional post limit)"
+task :build, :number do |t, args|
+  number = args[:number]
+  if number.nil? or number.empty?
+    system "jekyll --auto --server"
+  else
+    system "jekyll --auto --server --limit_posts=#{number}"
+  end
+end
+
+# rake preview
+desc "Launch a preview of the site in the browser"
+task :preview do
+  require 'Launchy'  # For launching the browser
+  puts "Launching browser for preview..."
+  sleep 2 #seconds
+  Launchy.open("http://localhost:4000")
+  Rake::Task[:build].invoke
 end
 
 # rake deploy["Commit message"]

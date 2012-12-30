@@ -1,22 +1,25 @@
 # Jekyll Rake Boilerplate
 
-*Jekyll Rake Boilerplate* is a small rake "boilerplate" for doing common tasks with the static site generator [Jekyll](http://jekyllrb.com/ "Jekyll"), such as generating your site, creating a new post or page from a default template and transfering it to a remote git repository, a remote host/server or a local git repository.
+*Jekyll Rake Boilerplate* is a small rake "boilerplate" for doing common tasks with the static site generator [Jekyll](http://jekyllrb.com/ "Jekyll"), such as generating your site, preview it in your default browser, creating a new post or page from a default template and transfering it to a remote git repository, a remote host/server or a local git repository.
 
 ## Usage
 
 ### Tasks
 
-    rake build[number]
     rake post["Post title"]
     rake page["Page title","Path/to/folder"]
+    rake build[number]
+    rake preview
     rake deploy["Commit message"]
     rake transfer
-
-`rake build` generates the site. If you want to generate it with a post limit, use `rake build[1]` or whatever number of posts you want to generate. 
 
 `rake post["Post title"]` creates a new post in the `_posts` directory by reading the default template file, adding the title you've specified and generating a file name by using the current date and the title.
 
 `rake page["Page title","Path/to/folder"]` creates a new page. If the file path is not specified the page will get placed in the site's source directory.
+
+`rake build` generates the site. If you want to generate it with a post limit, use `rake build[1]` or whatever number of posts you want to generate. 
+
+`rake preview` launches your default browser and then generates the site so you can preview it. Please note that you need to hit refresh in order for you to actually see it. This task requires the ruby gem [Launchy](http://rubygems.org/gems/launchy "Launchy"). You can install by typing `gem install launchy` or `sudo gem install launchy` in your terminal/command prompt.
 
 `rake deploy["Commit message"]` adds, commits and pushes your site to the site's remote git repository with the commit message you've specified.
 
@@ -88,6 +91,10 @@
 ## Known issues
 
 Rake tasks doesn't play nice when it comes to including commas in arguments. For example, if you try to create a post by running `post["One, two, three"]` the name and title of the post will become `One`. The easiest work-around for this is to skip the commas when your creating a post and adding them later on.
+
+## Credits
+
+Many thanks to [ixti](https://github.com/ixti "ixti on GitHub") for finding the `Launchy` gem and poiting me in the right direction.
 
 ## License
 
