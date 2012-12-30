@@ -1,4 +1,5 @@
 # Requirements
+require 'rake'       # For the rake tasks
 require 'yaml'       # For reading the configuration file
 require 'fileutils'  # For creating recursive directories
 
