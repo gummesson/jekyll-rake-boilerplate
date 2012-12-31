@@ -4,7 +4,7 @@
 page:
   template: _page.txt
   extension: md
-editor: geany
+editor: gvim
 transfer:
   command: rsync
   settings: -av
