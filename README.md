@@ -94,7 +94,7 @@ Rake tasks doesn't play nice when it comes to including commas in arguments. For
 
 ## Credits
 
-Many thanks to [ixti](https://github.com/ixti "ixti on GitHub") for finding the `Launchy` gem and poiting me in the right direction.
+Many thanks to [ixti](https://github.com/ixti "ixti on GitHub") for finding the `Launchy` gem and pointing me in the right direction.
 
 ## License
 
