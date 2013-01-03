@@ -26,10 +26,11 @@ task :post, :title do |t, args|
   content = File.read(template)
   
   File.open("_posts/#{filename}","w") { |file|
-    file.puts("#{content.gsub("title:", "title: #{title}")}") }
+    file.puts("#{content.gsub("title:", "title: \"#{title}\"")}") }
   puts "#{filename} was created."
   
   unless editor.nil? or editor.empty?
+    sleep 2 # seconds
     system "#{editor} _posts/#{filename}"
   end
 end
