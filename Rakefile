@@ -59,7 +59,7 @@ task :page, :title, :path do |t, args|
   content = File.read(template)
   
   File.open("#{filepath}/#{filename}","w") { |file|
-    file.puts("#{content.gsub("title:", "title: #{title}")}") }
+    file.puts("#{content.gsub("title:", "title: \"#{title}\"")}") }
   puts "#{filename} was created in #{filepath}."
   
   unless editor.nil? or editor.empty?
