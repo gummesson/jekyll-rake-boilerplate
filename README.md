@@ -8,7 +8,8 @@
 
     rake post["Post title"]
     rake page["Page title","Path/to/folder"]
-    rake build[number]
+    rake build
+    rake watch[number]
     rake preview
     rake deploy["Commit message"]
     rake transfer
@@ -17,13 +18,15 @@
 
 `rake page["Page title","Path/to/folder"]` creates a new page. If the file path is not specified the page will get placed in the site's source directory.
 
-`rake build` generates the site. If you want to generate it with a post limit, use `rake build[1]` or whatever number of posts you want to generate. 
+`rake build` just generates the site.
 
-`rake preview` launches your default browser and then generates the site so you can preview it. Please note that you need to hit refresh in order for you to actually see it. This task requires the ruby gem [Launchy](http://rubygems.org/gems/launchy "Launchy"). You can install by typing `gem install launchy` or `sudo gem install launchy` in your terminal/command prompt.
+`rake watch` generates the site and watches it for changes. If you want to generate it with a post limit, use `rake watch[1]` or whatever number of posts you want to see. 
 
-`rake deploy["Commit message"]` adds, commits and pushes your site to the site's remote git repository with the commit message you've specified.
+`rake preview` launches your default browser and then generates and watches the site so you can preview it. Please note that you need to hit refresh in order for you to actually see it. This task requires the ruby gem [Launchy](http://rubygems.org/gems/launchy "Launchy"). You can install by typing `gem install launchy` or `sudo gem install launchy` in your terminal/command prompt.
 
-`rake transfer` uses either `robocopy` or `rsync` to transfer your site to a remote host/server or a local git repository.
+`rake deploy["Commit message"]` adds, commits and pushes your site to the site's remote git repository with the commit message you've specified. It also uses the `rake build` task to generate the site before it goes through the whole git process.
+
+`rake transfer` uses either `robocopy` or `rsync` to transfer your site to a remote host/server or a local git repository. It also uses the `rake build` task to generate the site before it goes through the whole transfering process.
 
 ### _config.yml
 
