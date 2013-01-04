@@ -32,7 +32,7 @@ task :post, :title do |t, args|
       file.puts("#{content.gsub("title:", "title: \"#{title}\"")}") }
     puts "#{filename} was created."
     
-    if editor and not editor.nil? or editor.empty?
+    if editor && !editor.nil?
       sleep 2 # seconds
       system "#{editor} _posts/#{filename}"
     end
@@ -69,7 +69,7 @@ task :page, :title, :path do |t, args|
       file.puts("#{content.gsub("title:", "title: \"#{title}\"")}") }
     puts "#{filename} was created in #{filepath}."
     
-    if editor and not editor.nil? or editor.empty?
+    if editor && !editor.nil?
       sleep 2 # seconds
       system "#{editor} #{filepath}/#{filename}"
     end
