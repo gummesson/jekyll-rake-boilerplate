@@ -24,14 +24,18 @@ task :post, :title do |t, args|
   date = Time.now.strftime("%Y-%m-%d")
   filename = "#{date}-#{title.gsub(/[^[:alnum:]]+/, "-").downcase}.#{extension}"
   content = File.read(template)
-  
-  File.open("_posts/#{filename}","w") { |file|
-    file.puts("#{content.gsub("title:", "title: \"#{title}\"")}") }
-  puts "#{filename} was created."
-  
-  unless editor.nil? or editor.empty?
-    sleep 2 # seconds
-    system "#{editor} _posts/#{filename}"
+ 
+  if File.exists?("_posts/#{filename}")
+    raise "The post already exists."
+  else
+    File.open("_posts/#{filename}","w") { |file|
+      file.puts("#{content.gsub("title:", "title: \"#{title}\"")}") }
+    puts "#{filename} was created."
+    
+    if editor and not editor.nil? or editor.empty?
+      sleep 2 # seconds
+      system "#{editor} _posts/#{filename}"
+    end
   end
 end
 
@@ -52,18 +56,23 @@ task :page, :title, :path do |t, args|
   if filepath.nil? or filepath.empty?
     filepath = "./"
   else
-    FileUtils.mkdir_p("#{filepath}") unless File.exists?("#{filepath}")
+    FileUtils.mkdir_p("#{filepath}")
   end
-  
+
   filename = "#{title.gsub(/[^[:alnum:]]+/, "-").downcase}.#{extension}"
   content = File.read(template)
-  
-  File.open("#{filepath}/#{filename}","w") { |file|
-    file.puts("#{content.gsub("title:", "title: \"#{title}\"")}") }
-  puts "#{filename} was created in #{filepath}."
-  
-  unless editor.nil? or editor.empty?
-    system "#{editor} #{filepath}/#{filename}"
+ 
+  if File.exists?("#{filepath}/#{filename}")
+    raise "The page aldready exists."
+  else
+    File.open("#{filepath}/#{filename}","w") { |file|
+      file.puts("#{content.gsub("title:", "title: \"#{title}\"")}") }
+    puts "#{filename} was created in #{filepath}."
+    
+    if editor and not editor.nil? or editor.empty?
+      sleep 2 # seconds
+      system "#{editor} #{filepath}/#{filename}"
+    end
   end
 end
 
