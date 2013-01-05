@@ -31,7 +31,7 @@ task :post, :title do |t, args|
     File.open("_posts/#{filename}","w") { |file|
       file.puts("#{content.gsub("title:", "title: \"#{title}\"")}") }
     puts "#{filename} was created."
-    
+
     if editor && !editor.nil?
       sleep 2 # seconds
       system "#{editor} _posts/#{filename}"
@@ -48,11 +48,11 @@ task :page, :title, :path do |t, args|
   template = config["page"]["template"]
   extension = config["page"]["extension"]
   editor = config["editor"]
-  
+
   if title.nil? or title.empty?
     raise "Please add a title to your page."
   end
-  
+
   if filepath.nil? or filepath.empty?
     filepath = "./"
   else
@@ -61,14 +61,14 @@ task :page, :title, :path do |t, args|
 
   filename = "#{title.gsub(/[^[:alnum:]]+/, "-").downcase}.#{extension}"
   content = File.read(template)
- 
+
   if File.exists?("#{filepath}/#{filename}")
     raise "The page aldready exists."
   else
     File.open("#{filepath}/#{filename}","w") { |file|
       file.puts("#{content.gsub("title:", "title: \"#{title}\"")}") }
     puts "#{filename} was created in #{filepath}."
-    
+
     if editor && !editor.nil?
       sleep 2 # seconds
       system "#{editor} #{filepath}/#{filename}"
@@ -87,7 +87,7 @@ end
 desc "Generate and watch the site (with an optional post limit)"
 task :watch, :number do |t, args|
   number = args[:number]
-  
+
   if number.nil? or number.empty?
     system "jekyll --auto --server"
   else
@@ -99,11 +99,12 @@ end
 desc "Launch a preview of the site in the browser"
 task :preview do
   require 'Launchy'  # For launching the browser
-  
   puts "Launching browser for preview..."
   sleep 2 #seconds
 
-  Launchy.open("http://localhost:4000")
+  Thread.new do
+    Launchy.open("http://localhost:4000/")
+  end
   Rake::Task[:watch].invoke
 end
 
@@ -111,15 +112,20 @@ end
 desc "Deploy the site to it's remote git repository"
 task :deploy, :message do |t, args|
   message = args[:message]
+  branch = config["git"]["branch"]
 
   if message.nil? or message.empty?
     raise "Please add a commit message."
   end
 
-  Rake::Task[:build].invoke 
-  system "git add ."
-  system "git commit -m \"#{message}\""
-  system "git push origin master"
+  if branch.nil? or branch.empty?
+    raise "Please add a branch."
+  else
+    Rake::Task[:build].invoke 
+    system "git add ."
+    system "git commit -m \"#{message}\""
+    system "git push origin #{branch}"
+  end
 end
 
 # rake transfer

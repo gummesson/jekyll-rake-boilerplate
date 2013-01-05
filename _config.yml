@@ -5,6 +5,8 @@ page:
   template: _page.txt
   extension: md
 editor: gvim
+git:
+  branch: master
 transfer:
   command: rsync
   settings: -av

@@ -22,7 +22,7 @@
 
 `rake watch` generates the site and watches it for changes. If you want to generate it with a post limit, use `rake watch[1]` or whatever number of posts you want to see. 
 
-`rake preview` launches your default browser and then generates and watches the site so you can preview it. Please note that you need to hit refresh in order for you to actually see it. This task requires the ruby gem [Launchy](http://rubygems.org/gems/launchy "Launchy"). You can install by typing `gem install launchy` or `sudo gem install launchy` in your terminal/command prompt.
+`rake preview` launches your default browser and then generates and watches the site so you can preview it. Please note that you may need to hit refresh once your browser has launched. This task requires the ruby gem [Launchy](http://rubygems.org/gems/launchy "Launchy"). You can install by typing `gem install launchy` or `sudo gem install launchy` in your terminal/command prompt.
 
 `rake deploy["Commit message"]` adds, commits and pushes your site to the site's remote git repository with the commit message you've specified. It also uses the `rake build` task to generate the site before it goes through the whole git process.
 
@@ -37,6 +37,8 @@
       template:
       extension:
     editor:
+	git:
+	  branch:
     transfer:
       command:
       settings:
@@ -45,21 +47,30 @@
 
 ## Examples
 
-### Post template
+### Post Template
 
     ---
     title:
     layout: post
     ---
 
-### Page template
+### Page Template
 
     ---
     title:
     layout: page
     ---
 
-### Remote transfer settings (for Windows)
+### Editor
+
+    editor: gvim
+
+### Git Branch
+    
+    git:
+      branch: master
+
+### Remote Transfer Settings (for Windows)
 
     transfer:
       command: robocopy
@@ -67,7 +78,7 @@
       source: _site\
       destination: username@servername:\var\www\websitename\
 
-### Remote transfer settings (for Unix)
+### Remote Transfer Settings (for Unix)
 
     transfer:
       command: rsync
@@ -75,7 +86,7 @@
       source: _site/
       destination: username@servername:/var/www/websitename/
 
-### Local transfer settings (for Windows)
+### Local Transfer Settings (for Windows)
 
     transfer:
       command: robocopy
@@ -83,7 +94,7 @@
       source: _site\
       destination: C:\Git\username.github.com\
 
-### Local transfer settings (for Unix)
+### Local Transfer Settings (for Unix)
 
     transfer:
       command: rsync
@@ -91,7 +102,7 @@
       source: _site/
       destination: ~/Git/username.github.com/
 
-## Known issues
+## Known Issues
 
 Rake tasks doesn't play nice when it comes to including commas in arguments. For example, if you try to create a post by running `post["One, two, three"]` the name and title of the post will become `One`. The easiest work-around for this is to skip the commas when your creating a post and adding them later on.
 
@@ -103,7 +114,7 @@ Many thanks to [ixti](https://github.com/ixti "ixti on GitHub") for finding the 
 
 **The MIT License (MIT)**
 
-Copyright (c) 2012 Ellen Gummesson
+*Copyright (c) 2012 Ellen Gummesson*
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
