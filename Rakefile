@@ -1,4 +1,4 @@
-# Requirements 
+# Requirements
 require 'rake'       # For the rake tasks
 require 'yaml'       # For reading the configuration file
 require 'fileutils'  # For creating recursive directories
@@ -12,19 +12,19 @@ task :default => :watch
 # rake post["Post title"]
 desc "Create a post in the _posts directory"
 task :post, :title do |t, args|
-  title = args[:title]
-  template = config["post"]["template"]
+  title     = args[:title]
+  template  = config["post"]["template"]
   extension = config["post"]["extension"]
-  editor = config["editor"]
+  editor    = config["editor"]
 
   if title.nil? or title.empty?
     raise "Please add a title to your post."
   end
 
-  date = Time.now.strftime("%Y-%m-%d")
-  filename = "#{date}-#{title.gsub(/[^[:alnum:]]+/, "-").downcase}.#{extension}"
-  content = File.read(template)
- 
+  date     = Time.now.strftime("%Y-%m-%d")
+  filename = "#{date}-#{title.gsub(/('|!|\?|\s\z)/,"").gsub(/\s/,"-").downcase}.#{extension}"
+  content  = File.read(template)
+
   if File.exists?("_posts/#{filename}")
     raise "The post already exists."
   else
@@ -43,11 +43,11 @@ end
 # rake page["Page title","Path/to/folder"]
 desc "Create a page (with an optional filepath)"
 task :page, :title, :path do |t, args|
-  title = args[:title]
-  filepath = args[:path]
-  template = config["page"]["template"]
+  title     = args[:title]
+  filepath  = args[:path]
+  template  = config["page"]["template"]
   extension = config["page"]["extension"]
-  editor = config["editor"]
+  editor    = config["editor"]
 
   if title.nil? or title.empty?
     raise "Please add a title to your page."
@@ -59,8 +59,8 @@ task :page, :title, :path do |t, args|
     FileUtils.mkdir_p("#{filepath}")
   end
 
-  filename = "#{title.gsub(/[^[:alnum:]]+/, "-").downcase}.#{extension}"
-  content = File.read(template)
+  filename = "#{title.gsub(/('|!|\?|\s\z)/,"").gsub(/\s/,"-").downcase}.#{extension}"
+  content  = File.read(template)
 
   if File.exists?("#{filepath}/#{filename}")
     raise "The page aldready exists."
@@ -90,6 +90,7 @@ task :watch, :number do |t, args|
 
   if number.nil? or number.empty?
     system "jekyll --auto --server"
+
   else
     system "jekyll --auto --server --limit_posts=#{number}"
   end
@@ -99,12 +100,14 @@ end
 desc "Launch a preview of the site in the browser"
 task :preview do
   require 'Launchy'  # For launching the browser
+
   puts "Launching browser for preview..."
   sleep 2 #seconds
 
   Thread.new do
     Launchy.open("http://localhost:4000/")
   end
+
   Rake::Task[:watch].invoke
 end
 
@@ -112,7 +115,7 @@ end
 desc "Deploy the site to it's remote git repository"
 task :deploy, :message do |t, args|
   message = args[:message]
-  branch = config["git"]["branch"]
+  branch  = config["git"]["branch"]
 
   if message.nil? or message.empty?
     raise "Please add a commit message."
@@ -120,8 +123,10 @@ task :deploy, :message do |t, args|
 
   if branch.nil? or branch.empty?
     raise "Please add a branch."
+
   else
-    Rake::Task[:build].invoke 
+    Rake::Task[:build].invoke
+
     system "git add ."
     system "git commit -m \"#{message}\""
     system "git push origin #{branch}"
@@ -131,21 +136,23 @@ end
 # rake transfer
 desc "Transfer the site to a remote server or a local git repository"
 task :transfer do
-  command = config["transfer"]["command"]
-  source = config["transfer"]["source"]
+  command     = config["transfer"]["command"]
+  source      = config["transfer"]["source"]
   destination = config["transfer"]["destination"]
-  settings =config["transfer"]["settings"]
+  settings    = config["transfer"]["settings"]
 
   if command.nil? or command.empty?
     raise "Please choose a file transfer command."
 
   elsif command == "robocopy"
     Rake::Task[:build].invoke
+
     system "robocopy #{source} #{destination} #{settings}"
     puts "Your site was transfered."
 
   elsif command == "rsync"
     Rake::Task[:build].invoke
+
     system "rsync #{settings} #{source} #{destination}"
     puts "Your site was transfered."
 
