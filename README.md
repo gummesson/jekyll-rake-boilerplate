@@ -7,6 +7,7 @@
 ### Tasks
 
     rake post["Post title"]
+	rake draft["Post title"]
     rake page["Page title","Path/to/folder"]
     rake build
     rake watch[number]
@@ -14,7 +15,9 @@
     rake deploy["Commit message"]
     rake transfer
 
-`rake post["Post title"]` creates a new post in the `_posts` directory by reading the default template file, adding the title you've specified and generating a file name by using the current date and the title.
+`rake post["Post title"]` creates a new post in the `_posts` directory by reading the default template file, adding the title you've specified and generating a filename by using the current date and the title.
+
+`rake draft["Post title"]` creates a new post in the `_drafts` directory by reading the default template file, adding the title you've specified and generating a filename by using the current date and the title.
 
 `rake page["Page title","Path/to/folder"]` creates a new page. If the file path is not specified the page will get placed in the site's source directory.
 
