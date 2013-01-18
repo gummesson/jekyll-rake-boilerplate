@@ -27,6 +27,7 @@ task :post, :title do |t, args|
 
   if File.exists?("_posts/#{filename}")
     raise "The post already exists."
+
   else
     File.open("_posts/#{filename}","w") { |file|
       file.puts("#{content.gsub("title:", "title: \"#{title}\"")}") }
@@ -64,6 +65,7 @@ task :page, :title, :path do |t, args|
 
   if File.exists?("#{filepath}/#{filename}")
     raise "The page aldready exists."
+
   else
     File.open("#{filepath}/#{filename}","w") { |file|
       file.puts("#{content.gsub("title:", "title: \"#{title}\"")}") }
