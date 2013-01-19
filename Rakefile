@@ -10,7 +10,7 @@ config = YAML.load_file("_config.yml")
 task :default => :watch
 
 # rake post["Post title"]
-desc "Create a post in the _posts directory"
+desc "Create a post in _posts"
 task :post, :title do |t, args|
   title     = args[:title]
   template  = config["post"]["template"]
@@ -41,7 +41,7 @@ task :post, :title do |t, args|
 end
 
 # rake draft["Post title"]
-desc "Create a post in the _drafts directory"
+desc "Create a post in _drafts"
 task :draft, :title do |t, args|
   title     = args[:title]
   template  = config["post"]["template"]
@@ -52,8 +52,7 @@ task :draft, :title do |t, args|
     raise "Please add a title to your post."
   end
 
-  date     = Time.now.strftime("%Y-%m-%d")
-  filename = "#{date}-#{title.gsub(/('|!|\?|\s\z)/,"").gsub(/\s/,"-").downcase}.#{extension}"
+  filename = "#{title.gsub(/('|!|\?|\s\z)/,"").gsub(/\s/,"-").downcase}.#{extension}"
   content  = File.read(template)
 
   if File.exists?("_drafts/#{filename}")
@@ -69,6 +68,23 @@ task :draft, :title do |t, args|
       system "#{editor} _drafts/#{filename}"
     end
   end
+end
+
+# rake publish["post-title"]
+desc "Move a post from _drafts to _posts"
+task :publish, :post do |t, args|
+  post      = args[:post]
+  extension = config["post"]["extension"]
+
+  if post.empty?
+    raise "Please choose a post."
+  end
+
+  date     = Time.now.strftime("%Y-%m-%d")
+  filename = "#{post}.#{extension}"
+
+  FileUtils.mv("_drafts/#{filename}", "_posts/#{date}-#{filename}")
+  puts "#{filename} was moved to _posts."
 end
 
 # rake page["Page title"]
@@ -145,7 +161,7 @@ task :preview do
 end
 
 # rake deploy["Commit message"]
-desc "Deploy the site to it's remote git repository"
+desc "Deploy the site to a remote git repository"
 task :deploy, :message do |t, args|
   message = args[:message]
   branch  = config["git"]["branch"]

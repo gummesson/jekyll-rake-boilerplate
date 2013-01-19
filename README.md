@@ -8,6 +8,7 @@
 
     rake post["Post title"]
 	rake draft["Post title"]
+	rake publish["post-title"]
     rake page["Page title","Path/to/folder"]
     rake build
     rake watch[number]
@@ -17,7 +18,9 @@
 
 `rake post["Post title"]` creates a new post in the `_posts` directory by reading the default template file, adding the title you've specified and generating a filename by using the current date and the title.
 
-`rake draft["Post title"]` creates a new post in the `_drafts` directory by reading the default template file, adding the title you've specified and generating a filename by using the current date and the title.
+`rake draft["Post title"]` creates a new post in the `_drafts` directory by reading the default template file, adding the title you've specified and generating a filename.
+
+`rake publish["post-title"]` moves a post from the `_drafts` directory to the `_posts` directory and appends the current date to it.
 
 `rake page["Page title","Path/to/folder"]` creates a new page. If the file path is not specified the page will get placed in the site's source directory.
 
