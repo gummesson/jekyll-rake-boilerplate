@@ -22,7 +22,7 @@ task :post, :title do |t, args|
   end
 
   date     = Time.now.strftime("%Y-%m-%d")
-  filename = "#{date}-#{title.gsub(/('|!|\?|\s\z)/,"").gsub(/\s/,"-").downcase}.#{extension}"
+  filename = "#{date}-#{title.gsub(/(\'|\!|\?|\:|\s\z)/,"").gsub(/\s/,"-").downcase}.#{extension}"
   content  = File.read(template)
 
   if File.exists?("_posts/#{filename}")
@@ -52,7 +52,7 @@ task :draft, :title do |t, args|
     raise "Please add a title to your post."
   end
 
-  filename = "#{title.gsub(/('|!|\?|\s\z)/,"").gsub(/\s/,"-").downcase}.#{extension}"
+  filename = "#{title.gsub(/(\'|\!|\?|\:|\s\z)/,"").gsub(/\s/,"-").downcase}.#{extension}"
   content  = File.read(template)
 
   if File.exists?("_drafts/#{filename}")
@@ -107,7 +107,7 @@ task :page, :title, :path do |t, args|
     FileUtils.mkdir_p("#{filepath}")
   end
 
-  filename = "#{title.gsub(/('|!|\?|\s\z)/,"").gsub(/\s/,"-").downcase}.#{extension}"
+  filename = "#{title.gsub(/(\'|\!|\?|\:|\s\z)/,"").gsub(/\s/,"-").downcase}.#{extension}"
   content  = File.read(template)
 
   if File.exists?("#{filepath}/#{filename}")
