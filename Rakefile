@@ -76,8 +76,8 @@ task :publish, :post do |t, args|
   extension = config["post"]["extension"]
 
   if post.nil? or post.empty?
-    Dir["_drafts/*.*"].each do |filename|
-      list = File.basename(filename)
+    Dir["_drafts/*.#{extension}"].each do |filename|
+      list = File.basename(filename).sub(".#{extension}", "")
       puts list
     end
   else
