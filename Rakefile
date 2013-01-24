@@ -27,7 +27,6 @@ task :post, :title do |t, args|
 
   if File.exists?("_posts/#{filename}")
     raise "The post already exists."
-
   else
     File.open("_posts/#{filename}","w") { |file|
       file.puts("#{content.gsub("title:", "title: \"#{title}\"")}") }
@@ -57,7 +56,6 @@ task :draft, :title do |t, args|
 
   if File.exists?("_drafts/#{filename}")
     raise "The post already exists."
-
   else
     File.open("_drafts/#{filename}","w") { |file|
       file.puts("#{content.gsub("title:", "title: \"#{title}\"")}") }
@@ -70,21 +68,25 @@ task :draft, :title do |t, args|
   end
 end
 
+# rake publish
 # rake publish["post-title"]
 desc "Move a post from _drafts to _posts"
 task :publish, :post do |t, args|
   post      = args[:post]
   extension = config["post"]["extension"]
 
-  if post.empty?
-    raise "Please choose a post."
+  if post.nil? or post.empty?
+    Dir["_drafts/*.*"].each do |filename|
+      list = File.basename(filename)
+      puts list
+    end
+  else
+    date     = Time.now.strftime("%Y-%m-%d")
+    filename = "#{post}.#{extension}"
+
+    FileUtils.mv("_drafts/#{filename}", "_posts/#{date}-#{filename}")
+    puts "#{filename} was moved to _posts."
   end
-
-  date     = Time.now.strftime("%Y-%m-%d")
-  filename = "#{post}.#{extension}"
-
-  FileUtils.mv("_drafts/#{filename}", "_posts/#{date}-#{filename}")
-  puts "#{filename} was moved to _posts."
 end
 
 # rake page["Page title"]
@@ -112,7 +114,6 @@ task :page, :title, :path do |t, args|
 
   if File.exists?("#{filepath}/#{filename}")
     raise "The page aldready exists."
-
   else
     File.open("#{filepath}/#{filename}","w") { |file|
       file.puts("#{content.gsub("title:", "title: \"#{title}\"")}") }
@@ -139,7 +140,6 @@ task :watch, :number do |t, args|
 
   if number.nil? or number.empty?
     system "jekyll --auto --server"
-
   else
     system "jekyll --auto --server --limit_posts=#{number}"
   end
@@ -169,10 +169,8 @@ task :deploy, :message do |t, args|
   if message.nil? or message.empty?
     raise "Please add a commit message."
   end
-
   if branch.nil? or branch.empty?
     raise "Please add a branch."
-
   else
     Rake::Task[:build].invoke
 
@@ -192,19 +190,15 @@ task :transfer do
 
   if command.nil? or command.empty?
     raise "Please choose a file transfer command."
-
   elsif command == "robocopy"
     Rake::Task[:build].invoke
-
     system "robocopy #{source} #{destination} #{settings}"
     puts "Your site was transfered."
-
   elsif command == "rsync"
     Rake::Task[:build].invoke
 
     system "rsync #{settings} #{source} #{destination}"
     puts "Your site was transfered."
-
   else
     raise "#{command} isn't a valid file transfer command."
   end
