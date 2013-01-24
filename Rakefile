@@ -33,7 +33,7 @@ task :post, :title do |t, args|
     puts "#{filename} was created."
 
     if editor && !editor.nil?
-      sleep 2 # seconds
+      sleep 2
       system "#{editor} _posts/#{filename}"
     end
   end
@@ -62,7 +62,7 @@ task :draft, :title do |t, args|
     puts "#{filename} was created."
 
     if editor && !editor.nil?
-      sleep 2 # seconds
+      sleep 2
       system "#{editor} _drafts/#{filename}"
     end
   end
@@ -120,7 +120,7 @@ task :page, :title, :path do |t, args|
     puts "#{filename} was created in #{filepath}."
 
     if editor && !editor.nil?
-      sleep 2 # seconds
+      sleep 2
       system "#{editor} #{filepath}/#{filename}"
     end
   end
@@ -148,10 +148,10 @@ end
 # rake preview
 desc "Launch a preview of the site in the browser"
 task :preview do
-  require 'Launchy'  # For launching the browser
+  require 'Launchy'
 
   puts "Launching browser for preview..."
-  sleep 2 #seconds
+  sleep 2
 
   Thread.new do
     Launchy.open("http://localhost:4000/")
@@ -192,6 +192,7 @@ task :transfer do
     raise "Please choose a file transfer command."
   elsif command == "robocopy"
     Rake::Task[:build].invoke
+
     system "robocopy #{source} #{destination} #{settings}"
     puts "Your site was transfered."
   elsif command == "rsync"
