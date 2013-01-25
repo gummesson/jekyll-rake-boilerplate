@@ -29,7 +29,7 @@ task :post, :title do |t, args|
     raise "The post already exists."
   else
     File.open("_posts/#{filename}","w") { |file|
-      file.puts("#{content.gsub("title:", "title: \"#{title}\"")}") }
+      file.puts("#{content.sub("title:", "title: \"#{title}\"")}") }
     puts "#{filename} was created."
 
     if editor && !editor.nil?
@@ -58,7 +58,7 @@ task :draft, :title do |t, args|
     raise "The post already exists."
   else
     File.open("_drafts/#{filename}","w") { |file|
-      file.puts("#{content.gsub("title:", "title: \"#{title}\"")}") }
+      file.puts("#{content.sub("title:", "title: \"#{title}\"")}") }
     puts "#{filename} was created."
 
     if editor && !editor.nil?
@@ -116,7 +116,7 @@ task :page, :title, :path do |t, args|
     raise "The page aldready exists."
   else
     File.open("#{filepath}/#{filename}","w") { |file|
-      file.puts("#{content.gsub("title:", "title: \"#{title}\"")}") }
+      file.puts("#{content.sub("title:", "title: \"#{title}\"")}") }
     puts "#{filename} was created in #{filepath}."
 
     if editor && !editor.nil?
