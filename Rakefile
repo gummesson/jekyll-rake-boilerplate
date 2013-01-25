@@ -77,7 +77,7 @@ task :publish, :post do |t, args|
 
   if post.nil? or post.empty?
     Dir["_drafts/*.#{extension}"].each do |filename|
-      list = File.basename(filename).sub(".#{extension}", "")
+      list = File.basename(filename, ".*")
       puts list
     end
   else
