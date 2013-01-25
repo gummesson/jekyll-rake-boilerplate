@@ -28,8 +28,8 @@ task :post, :title do |t, args|
   if File.exists?("_posts/#{filename}")
     raise "The post already exists."
   else
-    File.open("_posts/#{filename}","w") { |file|
-      file.puts("#{content.sub("title:", "title: \"#{title}\"")}") }
+    parsed_content = "#{content.sub("title:", "title: \"#{title}\"")}"
+    File.write("_posts/#{filename}", parsed_content)
     puts "#{filename} was created."
 
     if editor && !editor.nil?
@@ -57,8 +57,8 @@ task :draft, :title do |t, args|
   if File.exists?("_drafts/#{filename}")
     raise "The post already exists."
   else
-    File.open("_drafts/#{filename}","w") { |file|
-      file.puts("#{content.sub("title:", "title: \"#{title}\"")}") }
+    parsed_content = "#{content.sub("title:", "title: \"#{title}\"")}"
+    File.write("_drafts/#{filename}", parsed_content)
     puts "#{filename} was created."
 
     if editor && !editor.nil?
@@ -115,8 +115,8 @@ task :page, :title, :path do |t, args|
   if File.exists?("#{filepath}/#{filename}")
     raise "The page aldready exists."
   else
-    File.open("#{filepath}/#{filename}","w") { |file|
-      file.puts("#{content.sub("title:", "title: \"#{title}\"")}") }
+    parsed_content = "#{content.sub("title:", "title: \"#{title}\"")}"
+    File.write("#{filepath}/#{filename}", parsed_content)
     puts "#{filename} was created in #{filepath}."
 
     if editor && !editor.nil?
