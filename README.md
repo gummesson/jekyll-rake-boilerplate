@@ -2,6 +2,8 @@
 
 *Jekyll Rake Boilerplate* is a small rake "boilerplate" for doing common tasks with the static site generator [Jekyll](http://jekyllrb.com/ "Jekyll"), such as generating your site, preview it in your default browser, creating a new post or page from a default template and transfering it to a remote git repository, a remote host/server or a local git repository.
 
+Please note that the code is intentionally "messy" and quite un-DRY so that'll be easier to take the parts that you want and toss away the others.
+
 ## Usage
 
 ### Tasks
