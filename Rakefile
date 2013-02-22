@@ -1,7 +1,7 @@
-# Requirements
-require 'rake'       # For the rake tasks
-require 'yaml'       # For reading the configuration file
-require 'fileutils'  # For creating recursive directories
+# Standard library
+require 'rake'
+require 'yaml'
+require 'fileutils'
 
 # Load the configuration file
 config = YAML.load_file("_config.yml")
@@ -150,10 +150,9 @@ desc "Launch a preview of the site in the browser"
 task :preview do
   require 'Launchy'
 
-  puts "Launching browser for preview..."
-  sleep 2
-
   Thread.new do
+    puts "Launching browser for preview..."
+    sleep 2
     Launchy.open("http://localhost:4000/")
   end
 
@@ -169,11 +168,11 @@ task :deploy, :message do |t, args|
   if message.nil? or message.empty?
     raise "Please add a commit message."
   end
+
   if branch.nil? or branch.empty?
     raise "Please add a branch."
   else
     Rake::Task[:build].invoke
-
     system "git add ."
     system "git commit -m \"#{message}\""
     system "git push origin #{branch}"
@@ -192,12 +191,10 @@ task :transfer do
     raise "Please choose a file transfer command."
   elsif command == "robocopy"
     Rake::Task[:build].invoke
-
     system "robocopy #{source} #{destination} #{settings}"
     puts "Your site was transfered."
   elsif command == "rsync"
     Rake::Task[:build].invoke
-
     system "rsync #{settings} #{source} #{destination}"
     puts "Your site was transfered."
   else
