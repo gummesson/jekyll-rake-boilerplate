@@ -129,7 +129,7 @@ end
 # rake build
 desc "Generate the site (no server)"
 task :build do
-  system "jekyll --no-server"
+  system "jekyll build"
 end
 
 # rake watch
@@ -139,9 +139,9 @@ task :watch, :number do |t, args|
   number = args[:number]
 
   if number.nil? or number.empty?
-    system "jekyll --auto --server"
+    system "jekyll server --watch"
   else
-    system "jekyll --auto --server --limit_posts=#{number}"
+    system "jekyll server --watch --limit_posts=#{number}"
   end
 end
 
