@@ -1,4 +1,5 @@
-# Standard library
+# == Standard Library ==========================================================
+
 require 'rake'
 require 'yaml'
 require 'fileutils'
