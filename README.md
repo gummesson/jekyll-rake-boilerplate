@@ -22,7 +22,7 @@ Please note that the code is intentionally "messy" and quite un-DRY so that'll b
 
 `rake draft["Post title"]` creates a new post in the `_drafts` directory by reading the default template file, adding the title you've specified and generating a filename.
 
-`rake publish["post-title"]` moves a post from the `_drafts` directory to the `_posts` directory and appends the current date to it. If there's no post title in the task it'll instead list all of the posts in the `_drafts` directory.
+`rake publish` moves a post from the `_drafts` directory to the `_posts` directory and appends the current date to it. It'll list all drafts and then you'll get to choose which draft to move by providing a number.
 
 `rake page["Page title","Path/to/folder"]` creates a new page. If the file path is not specified the page will get placed in the site's source directory.
 
@@ -71,7 +71,7 @@ Please note that the code is intentionally "messy" and quite un-DRY so that'll b
 
 ### Editor
 
-    editor: gvim
+    editor: vim
 
 ### Git Branch
     

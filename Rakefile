@@ -3,145 +3,150 @@ require 'rake'
 require 'yaml'
 require 'fileutils'
 
-# Load the configuration file
-config = YAML.load_file("_config.yml")
+# == Configuration =============================================================
 
 # Set "rake watch" as default task
 task :default => :watch
 
+# Load the configuration file
+CONFIG = YAML.load_file("_config.yml")
+
+# get and parse the date
+DATE = Time.now.strftime("%Y-%m-%d")
+
+# == Helpers ===================================================================
+
+# Chech the title
+def check_title(title)
+  if title.nil? or title.empty?
+    raise "Please add a title to your file."
+  end
+end
+
+# Transform the filename and date to a slug
+def transform_to_slug(title, extension)
+  characters = /(\'|\!|\?|\:|\s\z)/
+  whitespace = /\s/
+  "#{title.gsub(characters,"").gsub(whitespace,"-").downcase}.#{extension}"
+end
+
+# Read the template file
+def read_file(template)
+  File.read(template)
+end
+
+# Save the file with the title in the YAML front matter
+def write_file(content, title, directory, filename)
+  parsed_content = "#{content.sub("title:", "title: \"#{title}\"")}"
+  File.write("#{directory}/#{filename}", parsed_content)
+  puts "#{filename} was created in '#{directory}'."
+end
+
+# Create the file with the slug and open the default editor
+def create_file(directory, filename, content, title, editor)
+  if File.exists?("#{directory}/#{filename}")
+    raise "The file already exists."
+  else
+    write_file(content, title, directory, filename)
+    if editor && !editor.nil?
+      sleep 1
+      system "#{editor} #{directory}/#{filename}"
+    end
+  end
+end
+
+# == Tasks =====================================================================
+
 # rake post["Post title"]
 desc "Create a post in _posts"
 task :post, :title do |t, args|
-  title     = args[:title]
-  template  = config["post"]["template"]
-  extension = config["post"]["extension"]
-  editor    = config["editor"]
+  title = args[:title]
+  template = CONFIG["post"]["template"]
+  extension = CONFIG["post"]["extension"]
+  editor = CONFIG["editor"]
+  directory = "_posts"
 
-  if title.nil? or title.empty?
-    raise "Please add a title to your post."
-  end
-
-  date     = Time.now.strftime("%Y-%m-%d")
-  filename = "#{date}-#{title.gsub(/(\'|\!|\?|\:|\s\z)/,"").gsub(/\s/,"-").downcase}.#{extension}"
-  content  = File.read(template)
-
-  if File.exists?("_posts/#{filename}")
-    raise "The post already exists."
-  else
-    parsed_content = "#{content.sub("title:", "title: \"#{title}\"")}"
-    File.write("_posts/#{filename}", parsed_content)
-    puts "#{filename} was created."
-
-    if editor && !editor.nil?
-      sleep 2
-      system "#{editor} _posts/#{filename}"
-    end
-  end
+  check_title(title)
+  filename = "#{DATE}-#{transform_to_slug(title, extension)}"
+  content = read_file(template)
+  create_file(directory, filename, content, title, editor)
 end
 
 # rake draft["Post title"]
 desc "Create a post in _drafts"
 task :draft, :title do |t, args|
-  title     = args[:title]
-  template  = config["post"]["template"]
-  extension = config["post"]["extension"]
-  editor    = config["editor"]
+  title = args[:title]
+  template = CONFIG["post"]["template"]
+  extension = CONFIG["post"]["extension"]
+  editor = CONFIG["editor"]
+  directory = "_drafts"
 
-  if title.nil? or title.empty?
-    raise "Please add a title to your post."
-  end
-
-  filename = "#{title.gsub(/(\'|\!|\?|\:|\s\z)/,"").gsub(/\s/,"-").downcase}.#{extension}"
-  content  = File.read(template)
-
-  if File.exists?("_drafts/#{filename}")
-    raise "The post already exists."
-  else
-    parsed_content = "#{content.sub("title:", "title: \"#{title}\"")}"
-    File.write("_drafts/#{filename}", parsed_content)
-    puts "#{filename} was created."
-
-    if editor && !editor.nil?
-      sleep 2
-      system "#{editor} _drafts/#{filename}"
-    end
-  end
+  check_title(title)
+  filename = transform_to_slug(title, extension)
+  content = read_file(template)
+  create_file(directory, filename, content, title, editor)
 end
 
 # rake publish
-# rake publish["post-title"]
 desc "Move a post from _drafts to _posts"
-task :publish, :post do |t, args|
-  post      = args[:post]
-  extension = config["post"]["extension"]
+task :publish do
+  extension = CONFIG["post"]["extension"]
+  directory = "_drafts"
+  files = Dir["#{directory}/*.#{extension}"]
 
-  if post.nil? or post.empty?
-    Dir["_drafts/*.#{extension}"].each do |filename|
-      list = File.basename(filename, ".*")
-      puts list
-    end
+  files.each_with_index do |file, index| 
+    puts "#{index + 1}: #{file}".sub("#{directory}/", "")
+  end
+  print "> "
+  number = $stdin.gets
+
+  if number =~ /\D/
+    filename = files[number.to_i - 1].sub("#{directory}/", "")
+    FileUtils.mv("#{directory}/#{filename}", "_posts/#{DATE}-#{filename}")
+    puts "#{filename} was moved to '_posts'."
   else
-    date     = Time.now.strftime("%Y-%m-%d")
-    filename = "#{post}.#{extension}"
-
-    FileUtils.mv("_drafts/#{filename}", "_posts/#{date}-#{filename}")
-    puts "#{filename} was moved to _posts."
+    puts "Please choose a draft by the assigned number."
   end
 end
 
 # rake page["Page title"]
 # rake page["Page title","Path/to/folder"]
-desc "Create a page (with an optional filepath)"
+desc "Create a page (optional filepath)"
 task :page, :title, :path do |t, args|
-  title     = args[:title]
-  filepath  = args[:path]
-  template  = config["page"]["template"]
-  extension = config["page"]["extension"]
-  editor    = config["editor"]
+  title = args[:title]
+  template = CONFIG["page"]["template"]
+  extension = CONFIG["page"]["extension"]
+  editor = CONFIG["editor"]
+  directory = args[:path]
 
-  if title.nil? or title.empty?
-    raise "Please add a title to your page."
-  end
-
-  if filepath.nil? or filepath.empty?
-    filepath = "./"
+  if directory.nil? or directory.empty?
+    directory = "./"
   else
-    FileUtils.mkdir_p("#{filepath}")
+    FileUtils.mkdir_p("#{directory}")
   end
 
-  filename = "#{title.gsub(/(\'|\!|\?|\:|\s\z)/,"").gsub(/\s/,"-").downcase}.#{extension}"
-  content  = File.read(template)
-
-  if File.exists?("#{filepath}/#{filename}")
-    raise "The page aldready exists."
-  else
-    parsed_content = "#{content.sub("title:", "title: \"#{title}\"")}"
-    File.write("#{filepath}/#{filename}", parsed_content)
-    puts "#{filename} was created in #{filepath}."
-
-    if editor && !editor.nil?
-      sleep 2
-      system "#{editor} #{filepath}/#{filename}"
-    end
-  end
+  check_title(title)
+  filename = transform_to_slug(title, extension)
+  content = read_file(template)
+  create_file(directory, filename, content, title, editor)
 end
 
 # rake build
-desc "Generate the site (no server)"
+desc "Build the site"
 task :build do
   system "jekyll build"
 end
 
 # rake watch
 # rake watch[number]
-desc "Generate and watch the site (with an optional post limit)"
+desc "Serve and watch the site (optional post limit)"
 task :watch, :number do |t, args|
   number = args[:number]
 
   if number.nil? or number.empty?
-    system "jekyll server --watch"
+    system "jekyll serve --watch"
   else
-    system "jekyll server --watch --limit_posts=#{number}"
+    system "jekyll serve --watch --limit_posts=#{number}"
   end
 end
 
@@ -150,20 +155,24 @@ desc "Launch a preview of the site in the browser"
 task :preview do
   require 'Launchy'
 
-  Thread.new do
-    puts "Launching browser for preview..."
-    sleep 2
-    Launchy.open("http://localhost:4000/")
+  port = CONFIG["port"]
+  if port.nil? or port.empty?
+    port = 4000
   end
 
+  Thread.new do
+    puts "Launching browser for preview..."
+    sleep 1
+    Launchy.open("http://localhost:#{port}/")
+  end
   Rake::Task[:watch].invoke
 end
 
 # rake deploy["Commit message"]
-desc "Deploy the site to a remote git repository"
+desc "Deploy the site to a remote git repo"
 task :deploy, :message do |t, args|
   message = args[:message]
-  branch  = config["git"]["branch"]
+  branch = CONFIG["git"]["branch"]
 
   if message.nil? or message.empty?
     raise "Please add a commit message."
@@ -180,12 +189,12 @@ task :deploy, :message do |t, args|
 end
 
 # rake transfer
-desc "Transfer the site to a remote server or a local git repository"
+desc "Transfer the site (remote server or a local git repo)"
 task :transfer do
-  command     = config["transfer"]["command"]
-  source      = config["transfer"]["source"]
-  destination = config["transfer"]["destination"]
-  settings    = config["transfer"]["settings"]
+  command = CONFIG["transfer"]["command"]
+  source = CONFIG["transfer"]["source"]
+  destination = CONFIG["transfer"]["destination"]
+  settings = CONFIG["transfer"]["settings"]
 
   if command.nil? or command.empty?
     raise "Please choose a file transfer command."
