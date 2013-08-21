@@ -92,6 +92,7 @@ desc "Move a post from _drafts to _posts"
 task :publish do
   extension = CONFIG["post"]["extension"]
   directory = "_drafts"
+  destination = "_posts"
   files = Dir["#{directory}/*.#{extension}"]
 
   files.each_with_index do |file, index| 
@@ -102,8 +103,8 @@ task :publish do
 
   if number =~ /\D/
     filename = files[number.to_i - 1].sub("#{directory}/", "")
-    FileUtils.mv("#{directory}/#{filename}", "_posts/#{DATE}-#{filename}")
-    puts "#{filename} was moved to '_posts'."
+    FileUtils.mv("#{directory}/#{filename}", "#{destination}/#{DATE}-#{filename}")
+    puts "#{filename} was moved to '#{destination}'."
   else
     puts "Please choose a draft by the assigned number."
   end
