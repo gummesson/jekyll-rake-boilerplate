@@ -66,7 +66,6 @@ task :post, :title do |t, args|
   extension = CONFIG["post"]["extension"]
   editor = CONFIG["editor"]
   directory = "_posts"
-
   check_title(title)
   filename = "#{DATE}-#{transform_to_slug(title, extension)}"
   content = read_file(template)
@@ -81,7 +80,6 @@ task :draft, :title do |t, args|
   extension = CONFIG["post"]["extension"]
   editor = CONFIG["editor"]
   directory = "_drafts"
-
   check_title(title)
   filename = transform_to_slug(title, extension)
   content = read_file(template)
@@ -95,13 +93,11 @@ task :publish do
   directory = "_drafts"
   destination = "_posts"
   files = Dir["#{directory}/*.#{extension}"]
-
-  files.each_with_index do |file, index| 
+  files.each_with_index do |file, index|
     puts "#{index + 1}: #{file}".sub("#{directory}/", "")
   end
   print "> "
   number = $stdin.gets
-
   if number =~ /\D/
     filename = files[number.to_i - 1].sub("#{directory}/", "")
     FileUtils.mv("#{directory}/#{filename}", "#{destination}/#{DATE}-#{filename}")
@@ -120,13 +116,11 @@ task :page, :title, :path do |t, args|
   extension = CONFIG["page"]["extension"]
   editor = CONFIG["editor"]
   directory = args[:path]
-
   if directory.nil? or directory.empty?
     directory = "./"
   else
     FileUtils.mkdir_p("#{directory}")
   end
-
   check_title(title)
   filename = transform_to_slug(title, extension)
   content = read_file(template)
@@ -144,7 +138,6 @@ end
 desc "Serve and watch the site (optional post limit)"
 task :watch, :number do |t, args|
   number = args[:number]
-
   if number.nil? or number.empty?
     system "jekyll serve --watch"
   else
@@ -156,12 +149,10 @@ end
 desc "Launch a preview of the site in the browser"
 task :preview do
   require 'Launchy'
-
   port = CONFIG["port"]
   if port.nil? or port.empty?
     port = 4000
   end
-
   Thread.new do
     puts "Launching browser for preview..."
     sleep 1
@@ -175,11 +166,9 @@ desc "Deploy the site to a remote git repo"
 task :deploy, :message do |t, args|
   message = args[:message]
   branch = CONFIG["git"]["branch"]
-
   if message.nil? or message.empty?
     raise "Please add a commit message."
   end
-
   if branch.nil? or branch.empty?
     raise "Please add a branch."
   else
@@ -197,7 +186,6 @@ task :transfer do
   source = CONFIG["transfer"]["source"]
   destination = CONFIG["transfer"]["destination"]
   settings = CONFIG["transfer"]["settings"]
-
   if command.nil? or command.empty?
     raise "Please choose a file transfer command."
   elsif command == "robocopy"
