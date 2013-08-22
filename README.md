@@ -12,7 +12,7 @@ Please note that the code is intentionally "messy" and quite un-DRY so that'll b
 	rake draft["Title"]
 	rake publish
     rake page["Title"]
-        rake page["Title","path/to/folder"]
+        rake page["Title","Path/to/folder"]
     rake build
     rake watch
         rake watch[number]
