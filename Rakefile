@@ -135,13 +135,18 @@ end
 
 # rake watch
 # rake watch[number]
-desc "Serve and watch the site (optional post limit)"
-task :watch, :number do |t, args|
-  number = args[:number]
-  if number.nil? or number.empty?
+# rake watch["drafts"]
+desc "Serve and watch the site (with post limit or drafts)"
+task :watch, :option do |t, args|
+  option = args[:option]
+  if option.nil? or option.empty?
     system "jekyll serve --watch"
   else
-    system "jekyll serve --watch --limit_posts=#{number}"
+    if option == "drafts"
+      system "jekyll serve --watch --drafts"
+    else
+      system "jekyll serve --watch --limit_posts #{option}"
+    end
   end
 end
 

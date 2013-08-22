@@ -8,27 +8,30 @@ Please note that the code is intentionally "messy" and quite un-DRY so that'll b
 
 ### Tasks
 
-    rake post["Post title"]
-	rake draft["Post title"]
-	rake publish["post-title"]
-    rake page["Page title","Path/to/folder"]
+    rake post["Title"]
+	rake draft["Title"]
+	rake publish
+    rake page["Title"]
+        rake page["Title","path/to/folder"]
     rake build
-    rake watch[number]
+    rake watch
+        rake watch[number]
+        rake watch["drafts"]
     rake preview
     rake deploy["Commit message"]
     rake transfer
 
-`rake post["Post title"]` creates a new post in the `_posts` directory by reading the default template file, adding the title you've specified and generating a filename by using the current date and the title.
+`rake post["Title"]` creates a new post in the `_posts` directory by reading the default template file, adding the title you've specified and generating a filename by using the current date and the title.
 
-`rake draft["Post title"]` creates a new post in the `_drafts` directory by reading the default template file, adding the title you've specified and generating a filename.
+`rake draft["Title"]` creates a new post in the `_drafts` directory by reading the default template file, adding the title you've specified and generating a filename.
 
 `rake publish` moves a post from the `_drafts` directory to the `_posts` directory and appends the current date to it. It'll list all drafts and then you'll get to choose which draft to move by providing a number.
 
-`rake page["Page title","Path/to/folder"]` creates a new page. If the file path is not specified the page will get placed in the site's source directory.
+`rake page["Title","path/to/folder"]` creates a new page. If the file path is not specified the page will get placed in the site's source directory.
 
 `rake build` just generates the site.
 
-`rake watch` generates the site and watches it for changes. If you want to generate it with a post limit, use `rake watch[1]` or whatever number of posts you want to see. 
+`rake watch` generates the site and watches it for changes. If you want to generate it with a post limit, use `rake watch[1]` or whatever number of posts you want to see. If you want to generate your site with your drafts, use `rake watch["drafts"]`.
 
 `rake preview` launches your default browser and then generates and watches the site so you can preview it. Please note that you may need to hit refresh once your browser has launched. This task requires the ruby gem [Launchy](http://rubygems.org/gems/launchy "Launchy"). You can install by typing `gem install launchy` or `sudo gem install launchy` in your terminal/command prompt.
 
