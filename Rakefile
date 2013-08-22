@@ -58,7 +58,7 @@ end
 
 # == Tasks =====================================================================
 
-# rake post["Post title"]
+# rake post["Title"]
 desc "Create a post in _posts"
 task :post, :title do |t, args|
   title = args[:title]
@@ -72,7 +72,7 @@ task :post, :title do |t, args|
   create_file(directory, filename, content, title, editor)
 end
 
-# rake draft["Post title"]
+# rake draft["Title"]
 desc "Create a post in _drafts"
 task :draft, :title do |t, args|
   title = args[:title]
@@ -90,25 +90,25 @@ end
 desc "Move a post from _drafts to _posts"
 task :publish do
   extension = CONFIG["post"]["extension"]
-  directory = "_drafts"
+  source = "_drafts"
   destination = "_posts"
-  files = Dir["#{directory}/*.#{extension}"]
+  files = Dir["#{source}/*.#{extension}"]
   files.each_with_index do |file, index|
-    puts "#{index + 1}: #{file}".sub("#{directory}/", "")
+    puts "#{index + 1}: #{file}".sub("#{source}/", "")
   end
   print "> "
   number = $stdin.gets
   if number =~ /\D/
-    filename = files[number.to_i - 1].sub("#{directory}/", "")
-    FileUtils.mv("#{directory}/#{filename}", "#{destination}/#{DATE}-#{filename}")
+    filename = files[number.to_i - 1].sub("#{source}/", "")
+    FileUtils.mv("#{source}/#{filename}", "#{destination}/#{DATE}-#{filename}")
     puts "#{filename} was moved to '#{destination}'."
   else
     puts "Please choose a draft by the assigned number."
   end
 end
 
-# rake page["Page title"]
-# rake page["Page title","Path/to/folder"]
+# rake page["Title"]
+# rake page["Title","Path/to/folder"]
 desc "Create a page (optional filepath)"
 task :page, :title, :path do |t, args|
   title = args[:title]
