@@ -21,6 +21,11 @@ DRAFTS = "_drafts"
 
 # == Helpers ===================================================================
 
+# Execute a system command
+def execute(command)
+  system "#{command}"
+end
+
 # Chech the title
 def check_title(title)
   if title.nil? or title.empty?
@@ -55,7 +60,7 @@ def create_file(directory, filename, content, title, editor)
     write_file(content, title, directory, filename)
     if editor && !editor.nil?
       sleep 1
-      system "#{editor} #{directory}/#{filename}"
+      execute("#{editor} #{directory}/#{filename}")
     end
   end
 end
@@ -130,7 +135,7 @@ end
 # rake build
 desc "Build the site"
 task :build do
-  system "jekyll build"
+  execute("jekyll build")
 end
 
 # rake watch
@@ -140,12 +145,12 @@ desc "Serve and watch the site (with post limit or drafts)"
 task :watch, :option do |t, args|
   option = args[:option]
   if option.nil? or option.empty?
-    system "jekyll serve --watch"
+    execute("jekyll serve --watch")
   else
     if option == "drafts"
-      system "jekyll serve --watch --drafts"
+      execute("jekyll serve --watch --drafts")
     else
-      system "jekyll serve --watch --limit_posts #{option}"
+      execute("jekyll serve --watch --limit_posts #{option}")
     end
   end
 end
@@ -178,9 +183,9 @@ task :deploy, :message do |t, args|
     raise "Please add a branch."
   else
     Rake::Task[:build].invoke
-    system "git add ."
-    system "git commit -m \"#{message}\""
-    system "git push origin #{branch}"
+    execute("git add .")
+    execute("git commit -m \"#{message}\"")
+    execute("git push origin #{branch}")
   end
 end
 
@@ -195,11 +200,11 @@ task :transfer do
     raise "Please choose a file transfer command."
   elsif command == "robocopy"
     Rake::Task[:build].invoke
-    system "robocopy #{source} #{destination} #{settings}"
+    execute("robocopy #{source} #{destination} #{settings}")
     puts "Your site was transfered."
   elsif command == "rsync"
     Rake::Task[:build].invoke
-    system "rsync #{settings} #{source} #{destination}"
+    execute("rsync #{settings} #{source} #{destination}")
     puts "Your site was transfered."
   else
     raise "#{command} isn't a valid file transfer command."
