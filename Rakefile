@@ -12,8 +12,12 @@ task :default => :watch
 # Load the configuration file
 CONFIG = YAML.load_file("_config.yml")
 
-# get and parse the date
+# Get and parse the date
 DATE = Time.now.strftime("%Y-%m-%d")
+
+# Directories
+POSTS = "_posts"
+DRAFTS = "_drafts"
 
 # == Helpers ===================================================================
 
@@ -65,11 +69,10 @@ task :post, :title do |t, args|
   template = CONFIG["post"]["template"]
   extension = CONFIG["post"]["extension"]
   editor = CONFIG["editor"]
-  directory = "_posts"
   check_title(title)
   filename = "#{DATE}-#{transform_to_slug(title, extension)}"
   content = read_file(template)
-  create_file(directory, filename, content, title, editor)
+  create_file(POSTS, filename, content, title, editor)
 end
 
 # rake draft["Title"]
@@ -79,29 +82,26 @@ task :draft, :title do |t, args|
   template = CONFIG["post"]["template"]
   extension = CONFIG["post"]["extension"]
   editor = CONFIG["editor"]
-  directory = "_drafts"
   check_title(title)
   filename = transform_to_slug(title, extension)
   content = read_file(template)
-  create_file(directory, filename, content, title, editor)
+  create_file(DRAFTS, filename, content, title, editor)
 end
 
 # rake publish
 desc "Move a post from _drafts to _posts"
 task :publish do
   extension = CONFIG["post"]["extension"]
-  source = "_drafts"
-  destination = "_posts"
-  files = Dir["#{source}/*.#{extension}"]
+  files = Dir["#{DRAFTS}/*.#{extension}"]
   files.each_with_index do |file, index|
-    puts "#{index + 1}: #{file}".sub("#{source}/", "")
+    puts "#{index + 1}: #{file}".sub("#{DRAFTS}/", "")
   end
   print "> "
   number = $stdin.gets
   if number =~ /\D/
-    filename = files[number.to_i - 1].sub("#{source}/", "")
-    FileUtils.mv("#{source}/#{filename}", "#{destination}/#{DATE}-#{filename}")
-    puts "#{filename} was moved to '#{destination}'."
+    filename = files[number.to_i - 1].sub("#{DRAFTS}/", "")
+    FileUtils.mv("#{DRAFTS}/#{filename}", "#{POSTS}/#{DATE}-#{filename}")
+    puts "#{filename} was moved to '#{POSTS}'."
   else
     puts "Please choose a draft by the assigned number."
   end
