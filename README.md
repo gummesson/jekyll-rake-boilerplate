@@ -58,14 +58,14 @@ Please note that the code is intentionally "messy" and quite un-DRY so that'll b
 
 ## Examples
 
-### Post Template
+### Post template
 
     ---
     title:
     layout: post
     ---
 
-### Page Template
+### Page template
 
     ---
     title:
@@ -76,12 +76,12 @@ Please note that the code is intentionally "messy" and quite un-DRY so that'll b
 
     editor: vim
 
-### Git Branch
-    
+### Git branch
+
     git:
       branch: master
 
-### Remote Transfer Settings (for Windows)
+### Remote transfer settings (for Windows)
 
     transfer:
       command: robocopy
@@ -89,7 +89,7 @@ Please note that the code is intentionally "messy" and quite un-DRY so that'll b
       source: _site\
       destination: username@servername:\var\www\websitename\
 
-### Remote Transfer Settings (for Unix)
+### Remote transfer settings (for *nix)
 
     transfer:
       command: rsync
@@ -97,7 +97,7 @@ Please note that the code is intentionally "messy" and quite un-DRY so that'll b
       source: _site/
       destination: username@servername:/var/www/websitename/
 
-### Local Transfer Settings (for Windows)
+### Local transfer settings (for Windows)
 
     transfer:
       command: robocopy
@@ -105,7 +105,7 @@ Please note that the code is intentionally "messy" and quite un-DRY so that'll b
       source: _site\
       destination: C:\Git\username.github.com\
 
-### Local Transfer Settings (for Unix)
+### Local transfer settings (for *nix)
 
     transfer:
       command: rsync
@@ -113,7 +113,7 @@ Please note that the code is intentionally "messy" and quite un-DRY so that'll b
       source: _site/
       destination: ~/Git/username.github.com/
 
-## Known Issues
+## Known issues
 
 Rake tasks doesn't play nice when it comes to including commas in arguments. For example, if you try to create a post by running `post["One, two, three"]` the name and title of the post will become `One`. The easiest work-around for this is to skip the commas when your creating a post and adding them later on.
 
