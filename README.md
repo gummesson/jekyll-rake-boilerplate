@@ -33,7 +33,7 @@ Please note that the code is intentionally "messy" and quite un-DRY so that'll b
 
 `rake watch` generates the site and watches it for changes. If you want to generate it with a post limit, use `rake watch[1]` or whatever number of posts you want to see. If you want to generate your site with your drafts, use `rake watch["drafts"]`.
 
-`rake preview` launches your default browser and then generates and watches the site so you can preview it. Please note that you may need to hit refresh once your browser has launched. This task requires the ruby gem [Launchy](http://rubygems.org/gems/launchy "Launchy"). You can install by typing `gem install launchy` or `sudo gem install launchy` in your terminal/command prompt.
+`rake preview` launches your default browser and then builds, serves and watches the site.
 
 `rake deploy["Commit message"]` adds, commits and pushes your site to the site's remote git repository with the commit message you've specified. It also uses the `rake build` task to generate the site before it goes through the whole git process.
 
@@ -116,10 +116,6 @@ Please note that the code is intentionally "messy" and quite un-DRY so that'll b
 ## Known issues
 
 Rake tasks doesn't play nice when it comes to including commas in arguments. For example, if you try to create a post by running `post["One, two, three"]` the name and title of the post will become `One`. The easiest work-around for this is to skip the commas when your creating a post and adding them later on.
-
-## Credits
-
-Many thanks to [ixti](https://github.com/ixti "ixti on GitHub") for finding the `Launchy` gem and pointing me in the right direction.
 
 ## License
 

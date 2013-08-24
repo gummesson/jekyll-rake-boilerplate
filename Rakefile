@@ -3,6 +3,7 @@
 require 'rake'
 require 'yaml'
 require 'fileutils'
+require 'rbconfig'
 
 # == Configuration =============================================================
 
@@ -35,7 +36,7 @@ end
 
 # Transform the filename and date to a slug
 def transform_to_slug(title, extension)
-  characters = /(\'|\!|\?|\:|\s\z)/
+  characters = /("|'|!|\?|:|\s\z)/
   whitespace = /\s/
   "#{title.gsub(characters,"").gsub(whitespace,"-").downcase}.#{extension}"
 end
@@ -62,6 +63,17 @@ def create_file(directory, filename, content, title, editor)
       sleep 1
       execute("#{editor} #{directory}/#{filename}")
     end
+  end
+end
+
+# Get the "open" command
+def open_command
+  if RbConfig::CONFIG["host_os"] =~ /mswin|mingw/
+    "start"
+  elsif RbConfig::CONFIG["host_os"] =~ /darwin/
+    "open"
+  else
+    "xdg-open"
   end
 end
 
@@ -158,7 +170,6 @@ end
 # rake preview
 desc "Launch a preview of the site in the browser"
 task :preview do
-  require 'Launchy'
   port = CONFIG["port"]
   if port.nil? or port.empty?
     port = 4000
@@ -166,7 +177,7 @@ task :preview do
   Thread.new do
     puts "Launching browser for preview..."
     sleep 1
-    Launchy.open("http://localhost:#{port}/")
+    execute("#{open_command} http://localhost:#{port}/")
   end
   Rake::Task[:watch].invoke
 end
