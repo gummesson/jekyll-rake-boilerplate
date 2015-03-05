@@ -15,6 +15,8 @@ CONFIG = YAML.load_file("_config.yml")
 
 # Get and parse the date
 DATE = Time.now.strftime("%Y-%m-%d")
+TIME = Time.now.strftime("%H:%M:%S")
+POST_TIME = DATE + ' ' + TIME
 
 # Directories
 POSTS = "_posts"
@@ -49,6 +51,7 @@ end
 # Save the file with the title in the YAML front matter
 def write_file(content, title, directory, filename)
   parsed_content = "#{content.sub("title:", "title: \"#{title}\"")}"
+  parsed_content = "#{parsed_content.sub("date:", "date: #{POST_TIME}")}"
   File.write("#{directory}/#{filename}", parsed_content)
   puts "#{filename} was created in '#{directory}'."
 end
